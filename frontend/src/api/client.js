@@ -69,14 +69,53 @@ export const getProfile = async (username = getCurrentUsername()) => {
   return normalizeProfile(data);
 };
 
-export const saveProfile = async ({ username = getCurrentUsername(), bio, profileImage = '' }) => {
-  localStorage.setItem('username', username);
+export const saveProfile = async ({
+  username = getCurrentUsername(),
+  currentUsername = getCurrentUsername(),
+  bio,
+  profileImage = '',
+}) => {
   const { data } = await api.post('/profile', {
     username,
+    current_username: currentUsername,
     bio,
     profile_image: profileImage,
   });
-  return normalizeProfile(data);
+  const profile = normalizeProfile(data);
+  localStorage.setItem('username', profile.username || username);
+  return profile;
+};
+
+export const toggleBookmark = async ({ username = getCurrentUsername(), postId }) => {
+  const { data } = await api.post('/bookmarks', { username, post_id: postId });
+  return data;
+};
+
+export const getBookmarks = async (username = getCurrentUsername()) => {
+  const { data } = await api.get(`/bookmarks/${username}`);
+  return (data?.bookmarks || []).map(normalizePost);
+};
+
+export const removeBookmark = async ({ username = getCurrentUsername(), postId }) => {
+  const { data } = await api.delete(`/bookmarks/${username}/${postId}`);
+  return data;
+};
+
+export const getConversations = async (username = getCurrentUsername()) => {
+  const { data } = await api.get(`/messages/${encodeURIComponent(username)}`);
+  return data?.conversations || [];
+};
+
+export const getMessages = async (otherUsername, username = getCurrentUsername()) => {
+  const { data } = await api.get(
+    `/messages/${encodeURIComponent(username)}/${encodeURIComponent(otherUsername)}`
+  );
+  return data?.messages || [];
+};
+
+export const sendMessage = async (recipient, content, username = getCurrentUsername()) => {
+  const { data } = await api.post('/messages', { username, recipient, content });
+  return data;
 };
 
 function normalizeScanResult(data = {}) {

@@ -9,7 +9,7 @@ import {
   FiTrash2,
 } from 'react-icons/fi';
 import RiskBadge from './RiskBadge';
-import { createReply, getReplies } from '../api/client';
+import { createReply, getReplies, toggleBookmark, removeBookmark } from '../api/client';
 import './PostCard.css';
 
 function timeAgo(iso) {
@@ -91,6 +91,21 @@ export default function PostCard({ post, onDelete }) {
       setReplyError('Could not save reply.');
     } finally {
       setSendingReply(false);
+    }
+  };
+
+  const handleBookmarkToggle = async () => {
+    const nextValue = !bookmarked;
+    setBookmarked(nextValue);
+
+    try {
+      if (nextValue) {
+        await toggleBookmark({ postId: post.id });
+      } else {
+        await removeBookmark({ postId: post.id });
+      }
+    } catch {
+      setBookmarked(!nextValue);
     }
   };
 
@@ -192,7 +207,7 @@ export default function PostCard({ post, onDelete }) {
               className={`post-card__action ${
                 bookmarked ? 'post-card__action--saved' : ''
               }`}
-              onClick={() => setBookmarked((current) => !current)}
+              onClick={handleBookmarkToggle}
               title="Bookmark"
             >
               <FiBookmark

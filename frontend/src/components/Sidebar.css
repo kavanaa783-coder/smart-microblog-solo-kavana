@@ -5,6 +5,7 @@
   position: sticky;
   top: 0;
   padding: var(--sp-4) var(--sp-2);
+  border-right: 1px solid var(--border);
 }
 
 .sidebar__brand {
@@ -62,7 +63,7 @@
   width: 100%;
   justify-content: flex-start;
   transition: background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out);
+    color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 
 .sidebar__icon {
@@ -81,6 +82,7 @@
   font-weight: 700;
   color: var(--brand);
   background: var(--brand-soft);
+  border: 1px solid rgba(29, 155, 240, 0.12);
 }
 
 .sidebar__item--active .sidebar__icon { transform: scale(1.06); }
