@@ -1,0 +1,24 @@
+======================================================================
+MODEL 4 — RoBERTa PII NER
+======================================================================
+
+Model: roberta-base
+Training documents: 63224
+Validation documents: 7903
+Entity types: 28
+BIO labels: 57
+Max length: 128
+Epochs: 5
+Training time seconds: 16282.04
+Evaluation time seconds: 750.44
+
+OVERALL METRICS
+----------------------------------------------------------------------
+eval_loss: 0.013220277614891529
+eval_precision: 0.9851833859606509
+eval_recall: 0.9869813845966663
+eval_f1: 0.9860815656719139
+eval_runtime: 750.4199
+eval_samples_per_second: 10.531
+eval_steps_per_second: 10.531
+epoch: 5.0

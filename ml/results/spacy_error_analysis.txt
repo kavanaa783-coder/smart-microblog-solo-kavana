@@ -1,0 +1,512 @@
+SPACY MODEL ERROR ANALYSIS
+======================================================================
+
+
+DOB
+----------------------------------------------------------------------
+
+Example 1
+Type: MISSED
+Entity: 08/09/1948
+Text: Our local children's author Nico would be visiting us on 08/09/1948 to sign his books in the school library. Please join us at 19490-6094 for this exciting experience.
+
+Example 2
+Type: FALSE_POSITIVE
+Entity: February 14, 2022
+Text: Hey Jesus, just confirming your appointment for the alternative medicine webinar on February 14, 2022. Please Reply to confirm.
+
+Example 3
+Type: MISSED
+Entity: 12th February
+Text: Hi Health Champions, join us for a health talk on 12th February. Let's discuss the benefits of green vegetables for Grey and understand the correlation between the two.
+
+Example 4
+Type: MISSED
+Entity: 14/01/1977
+Text: Greetings, Mason! Let's celebrate another year of wellness on 14/01/1977. Don't miss the event at 176,Apt. 388.
+
+Example 5
+Type: MISSED
+Entity: 13/08/1900
+Text: All tools need to reviewed before 13/08/1900. Check if any transaction was made through 1tsSqex1J259mkGDygCLsxqwYHaS1ohD3.
+
+Example 6
+Type: MISSED
+Entity: 2/59
+Text: We require another $1000 in New Leu for the medical training as per contract on 2/59. Please process it using 4662102590261843
+
+Example 7
+Type: FALSE_POSITIVE
+Entity: November 28, 1958
+Text: Reminder: Submit responses for the Market Research survey by November 28, 1958. Respond via https://minor-coast.com using credentials (Raphaelle82, OSBepKc9djMZ).
+
+Example 8
+Type: MISSED
+Entity: 18th November
+Text: Parent-Teacher Conference at Port Arielle will be on 18th November. Bring the 5955 provided to access the meeting room.
+
+Example 9
+Type: MISSED
+Entity: September 4, 1932
+Text: Appointment confirmation for Golden on September 4, 1932. Session fee of kr125.00 to be processed via bitcoin 3LdE9NdqxnB4VF8R812qxkNQmbqk8tuKHyf. Send confirmation to FO5704450060972008.
+
+Example 10
+Type: MISSED
+Entity: 01/02/1904
+Text: Inquiry for a case study on administrative law. Genderflux in the Director role aged 46 needed. Contact by 01/02/1904.
+
+Example 11
+Type: MISSED
+Entity: 16th April
+Text: Consuelo, the diet plan combining nutritional needs for 16th April and Female to male transgender man, will improve adherence and deliver results. We'll discuss more. But first, could you confirm 3754828988494125 for payment?
+
+Example 12
+Type: MISSED
+Entity: 11/28
+Text: STEM Education is evolving. The sessions at the 741 location in the Southwest campus will continue from 11/28. Please access the learning modules with this password: frY34JtSLeEE. Any further queries, please contact us through the main email for the course or the phone IMEI: 53-779063-624121-6.
+
+Example 13
+Type: MISSED
+Entity: 1977-05-30T09:10:12.177Z
+Text: Construction noise in State Road exceeding permissible limits. Complaint was registered by a Intersex resident on 1977-05-30T09:10:12.177Z. Please handle.
+
+Example 14
+Type: MISSED
+Entity: 16th September
+Text: Your appointment with sports medicine specialist Twila is on 16th September, bring 5410070852820091 for payment.
+
+Example 15
+Type: MISSED
+Entity: January 27, 1981
+Text: Granville, just a reminder that your session with us on January 27, 1981 will be covered by your diners_club. Please let us know if you have any concerns.
+
+Example 16
+Type: MISSED
+Entity: 1981-11-03T06:30:59.814Z
+Text: On 1981-11-03T06:30:59.814Z, access was made on 'Progress Spectrum Beacon' from ethereum address 0x9defd07ced46cbd7bab5fefa53f6f7f5d3da29fe tied to account 28352378. Please affirm.
+
+Example 17
+Type: MISSED
+Entity: 4/96
+Text: Effective from 4/96, we realigned some job roles and introduced new Analyst for handling financial transactions. For making transactions anonymously, use 3icjYHYbCs82Xz99B56GXXW2hnd7fn55Q or 0x8d2abcf2be85fbee65aeeca60cc13ca4c6afc7d8. For secure data transfer, use IP 223.255.7.20.
+
+Example 18
+Type: MISSED
+Entity: 1952-04-11T18:29:11.839Z
+Text: Parents meeting on 1952-04-11T18:29:11.839Z at our Suite 295 campus! To secure your spot, transfer the participation fee to our bitcoin address 35aaTEqzS3XjSKfycSbidEeyHbRBgQ2FAGj. Let's discuss the progress of your child.
+
+Example 19
+Type: MISSED
+Entity: November 19, 1998
+Text: Meeting to discuss Wunsch, Kling and Keeling special learning program. We require your attendance on November 19, 1998, join via the Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.1; .NET CLR 1.3.69448.3).
+
+Example 20
+Type: MISSED
+Entity: March 20, 1939
+Text: Bailey, surgery is set for March 20, 1939. We received Vatu10,000 from your card ending in 1259506937067207. Take it easy.
+
+Example 21
+Type: MISSED
+Entity: 1983-04-28T12:53:22.277Z
+Text: The patient 75650683858, of Transexual woman gender, aged 32 came in for consultation on 1983-04-28T12:53:22.277Z. Complaints include high fever and severe fatigue. Preliminary tests scheduled.
+
+Example 22
+Type: MISSED
+Entity: 1957-03-29T20:22:32.009Z
+Text: Hi Lilly, your annual school fees are due. Here are the details: Amount: Mauritius Rupee, Bank: maestro, Account: GI76UUZO9V99N0I298V3521. The payment deadline is 1957-03-29T20:22:32.009Z.
+
+Example 23
+Type: FALSE_POSITIVE
+Entity: 6th August
+Text: Care plan will need updating after patient Leannon's test results on 6th August come out.
+
+Example 24
+Type: MISSED
+Entity: 21/02/1955
+Text: A meeting regarding higher education policies will be held on 21/02/1955. Possible discussion includes the value of digital currencies in higher education. 1mZtrMm7fm46up1Ec7s2CmsLYM, 0xfcfa2ac8cf9c83fc2f9bb5acd52d92f7c8ad0eac or even Mgz25bNZ7HwpQsWC6Nn96YCvurBezV, which would be more viable as a tuition payment method?
+
+Example 25
+Type: MISSED
+Entity: 28/09/1915
+Text: Dear Magnus, Please attend your cognitive therapy session on 28/09/1915 conducted by Future Brand Facilitator Marcia. The meeting will take place at 118, Warren Forges, Marche. Any additional inquiries, please contact us via Letha_Douglas75@gmail.com or through 96-369985-785524-5.
+
+Example 26
+Type: MISSED
+Entity: 1949-12-05T09:39:05.389Z
+Text: Introducing Sofia, the new head of emergency. She'll start on 1949-12-05T09:39:05.389Z. Can you update the JO33OTGS5005400600102568406060 and 8855924597636552 for her payroll?
+
+Example 27
+Type: MISSED
+Entity: 06/11/1920
+Text: STEM initiatives at our school are off to a great start this term. Just a reminder to update the team documents and expenses using the following account 7489162116420037, 760 before 06/11/1920.
+
+Example 28
+Type: MISSED
+Entity: 04/07/1962
+Text: Hi there! Here's a reminder of your yearly check-up due to be held on 04/07/1962. Registered number under the healthcare policy: 2172394294190075.
+
+Example 29
+Type: MISSED
+Entity: December 12, 1916
+Text: Our maths education department decided to conduct a seminar on December 12, 1916. Payment of Fiji Dollar 317,076.05 can be made to AL8611900380Q28K48O30818256Q.
+
+Example 30
+Type: FALSE_POSITIVE
+Entity: 2020-03-
+Text: Dear Trans man, your funds 0.550m can be accessed using Brycen97 after 2020-03-09T09:47:43.498Z. Contact us at Jeremy.Schaden@gmail.com if you experience trouble.
+
+Example 31
+Type: FALSE_POSITIVE
+Entity: October 29, 1977
+Text: Dear Florida, your tutoring session will be held at [-36.7991,30.5598] on October 29, 1977. Please confirm receipt of this message by contacting 04 34 26.99.96.
+
+Example 32
+Type: MISSED
+Entity: 25/11/1941
+Text: Hi Demigender, I am contacting the parents of our students for a meeting on 25/11/1941. The purpose of the meeting is to respond to the challenges their kids may be facing. RSVP ASAP.
+
+Example 33
+Type: FALSE_POSITIVE
+Entity: March 16, 2012
+Text: Dear Miss, we're looking forward to your sessions on June 12, 1947 and March 16, 2012. Our teams find your Legacy Division Director background incredibly helpful.
+
+Example 34
+Type: FALSE_POSITIVE
+Entity: 1956-12-
+Text: We must meet to discuss the health data of our special patient. The meeting will take place at [-61.5117,-20.6358] on 1956-12-04T18:39:48.560Z. Let's discuss over lunch. You can spot me--I'm the Female with amber eyes.
+
+Example 35
+Type: MISSED
+Entity: November 5, 1980
+Text: Notice: Kindly visit the financial office at Apt. 969 with your 654-63-4763 to redeem your student aid grant before November 5, 1980.
+
+Example 36
+Type: MISSED
+Entity: 1925-07-05T16:38:17.035Z
+Text: Dear Ms. August, please update the medical records of patient Jonathan with SSN 756.8441.8626 regarding the surgical procedures scheduled on 1925-07-05T16:38:17.035Z. Please log into our medical record system using your browser Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.9.9; rv:9.5) Gecko/20100101 Firefox/9.5.3.
+
+Example 37
+Type: MISSED
+Entity: 1923-03-25T03:40:01.509Z
+Text: Reminder for vaccination on 1923-03-25T03:40:01.509Z for Camden at Suite Suite 260.
+
+Example 38
+Type: MISSED
+Entity: 3rd November
+Text: Hi Nicola56, the Global education virtual round table is fast approaching. Purchase your tickets by transferring money to 32PdXVGG2HasG12WhGMDEwCpwNDTjytTA. You will be joining in as a Transexual male, so remember, your voice counts! See you on 3rd November. Regards, Kai
+
+Example 39
+Type: MISSED
+Entity: July 14, 1914
+Text: Your dental insurance cover is about to lapse on July 14, 1914, Dahlia. Please renew it using your credit card from jcb.
+
+Example 40
+Type: MISSED
+Entity: October 22, 1962
+Text: Looking at the raw data, there is a need for increased adoption of preventive measures in sexual health among Female. The demographic most affected is October 22, 1962 to April 26, 1953..
+
+Example 41
+Type: MISSED
+Entity: April 26, 1953
+Text: Looking at the raw data, there is a need for increased adoption of preventive measures in sexual health among Female. The demographic most affected is October 22, 1962 to April 26, 1953..
+
+Example 42
+Type: MISSED
+Entity: 10/02/1955
+Text: Dear Micah, as a valuable administrator within our institution, we feel it's essential to prioritize mental health. Our records indicate that your last session with the mental health professional was on 10/02/1955. We would like to schedule a new session.
+
+Example 43
+Type: MISSED
+Entity: 8/16
+Text: Faculty meeting set for the 8/16. Let's discuss how to help children with cyberbullying. WEBINAR ID: 3974806466111678. PASSWORD: pLZIypF_i2MK.
+
+Example 44
+Type: MISSED
+Entity: 15/08/1943
+Text: To Marietta Sasha Cummerata-Haag, we have a scheduled chronic disease management on 15/08/1943. Please confirm.
+
+Example 45
+Type: MISSED
+Entity: 24/12/1921
+Text: Dear Madonna Harper, we are upgrading our servers on 24/12/1921 and you may face difficulties accessing our online health resources. We apologize for the inconvinience.
+
+Example 46
+Type: MISSED
+Entity: September 17, 1937
+Text: Gina, I've just read through your medical research proposal and I'm impressed. Would love to discuss it over a call on September 17, 1937.
+
+Example 47
+Type: FALSE_POSITIVE
+Entity: 1908-02-
+Text: We're doing a recap of our sales in Dumfries and Galloway and Fort Robbburgh and need to understand the local sales tax laws. Please send us a quick summary by 1908-02-22T04:04:58.408Z.
+
+Example 48
+Type: FALSE_POSITIVE
+Entity: 1900-11-
+Text: Could you arrange a talk for our athletes on stress management? Please send the invites to my email Piper_OReilly@gmail.com and we should aim for 1900-11-21T20:21:44.468Z. Use the organisation's card 4391976229763326 for event costs.
+
+Example 49
+Type: MISSED
+Entity: June 26, 1967
+Text: Seminar on Cyber Security set for June 26, 1967. Remote learning calls for careful measures, especially for the young ones. Event details sent to 0x4e8cedd20cada7fda29b7898c1cb1d24c08a9067
+
+Example 50
+Type: MISSED
+Entity: 08/09/1907
+Text: Meeting regarding new testing norms is scheduled on 08/09/1907. Ensure presence. If unable to attend, email us via our website https://jittery-console.info. Don't forget to mention your 72882681!
+
+PIN
+----------------------------------------------------------------------
+
+Example 1
+Type: MISSED
+Entity: 3167
+Text: Hello, your information has been updated to include your primary care 29-047604-419487-7, which we require for verification during visits. During your next visit, please provide the PIN associated with your account: 3167
+
+Example 2
+Type: MISSED
+Entity: 5955
+Text: Parent-Teacher Conference at Port Arielle will be on 18th November. Bring the 5955 provided to access the meeting room.
+
+Example 3
+Type: FALSE_POSITIVE
+Entity: 0947226664193777
+Text: Urgently seeking a Forward Paradigm Liaison for our sports medicine department. Apply with referral code 0947226664193777 and reach out to Mrs. Schmidt for any queries.
+
+Example 4
+Type: FALSE_POSITIVE
+Entity: 3464199943792018
+Text: Hello Dandre, please log into the student portal to check exam results with password Y9vkaz3EammC for 3464199943792018 remaining attempts.
+
+Example 5
+Type: FALSE_POSITIVE
+Entity: 4303
+Text: Hi Addison, a special class for maths will be arranged in 4303 for grade 10 students.
+
+Example 6
+Type: MISSED
+Entity: 9642
+Text: Anonymised data gathered from public health initiatives are essential for planning better health strategies. One such initiative uses device 8c:62:97:74:7c:dc to log anonymous health trends. We ensure privacy and do not store sensitive information such as bfKEbFIohgE1 or 9642.
+
+Example 7
+Type: FALSE_POSITIVE
+Entity: 3148247232445982
+Text: This communication is to discuss the latest diagnostic features. Payable to Savings Account with amount Bhutanese Ngultrum7102777684643441. You may consider using 3148247232445982 for faster processing.
+
+Example 8
+Type: MISSED
+Entity: 2361
+Text: In order to confirm your registration for the upcoming academic competition, please enter the following security code sent to your device with IMEI number 94-397437-865656-1 2361.
+
+Example 9
+Type: MISSED
+Entity: 0774
+Text: Tokens ready to process the emergency treatment: BG75RWAN33408653477V53, 507, 71-926956-019660-5. Include your 0774 to unlock the advanced features.
+
+Example 10
+Type: FALSE_POSITIVE
+Entity: 1056472650367197
+Text: Please send Angie40's results. Ensure to verify 1056472650367197 for testing fees.
+
+Example 11
+Type: FALSE_POSITIVE
+Entity: 4018735455685392
+Text: Hi Miss James, we are compiling a research paper on the effectiveness of different psychoanalysis methods across various job types. As a Representative, your input would be invaluable. Your privacy is our utmost priority and all individual data would be anonymised using the unique identifier 4018735455685392.
+
+Example 12
+Type: FALSE_POSITIVE
+Entity: 9449
+Text: The department vehicle assigned to our maternal health project has moved to a new location. The details are VEHICLEVIN: UGXY6LBWVAT440704, VEHICLEVRM: ZX74BVY. Check for a 9449 nearby.
+
+Example 13
+Type: FALSE_POSITIVE
+Entity: 61755
+Text: Received Checking Account statement. Past due balance ₨74.4050k. Code 61755 used for check receipt. Is this foreclosure?
+
+Example 14
+Type: FALSE_POSITIVE
+Entity: 57869584
+Text: For the open-house workshop, the registration link has been sent on their respective email. The unique identification 59966302 has been allotted to each student for reference. However, an error with 57869584 needs to be resolved.
+
+Example 15
+Type: MISSED
+Entity: 9857
+Text: Liliane Schowalter's next session is on 29th March. Submit payment using visa card with number 0738737041756800. The total cost stands at 832.2k Russian Ruble. After payment, authenticate with your unique 9857.
+
+Example 16
+Type: FALSE_POSITIVE
+Entity: 3237082592487925
+Text: You should have received an email about an upcoming field trip. If you did not, please ensure your email registered on our database is correct 3237082592487925 and your USERAGENT: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.2; Trident/7.1) is updated. For the trip, we'll travel Southwest towards [89.0369,67.5311].
+
+Example 17
+Type: FALSE_POSITIVE
+Entity: 45724724
+Text: Hello Staff, as part of change management, you are expected to install new software to access our database. Use your IP address dc4d:5728:a1f0:2420:daea:da3c:9aad:4578 to download it. If any issues arise, reach us at 67-023031-895021-1 using the code 45724724.
+
+Example 18
+Type: MISSED
+Entity: 8468
+Text: Invoice for Sports Medicine equipment received. Payment is Forint9561582900290220 with 8468 for card 6202849127123260.
+
+Example 19
+Type: FALSE_POSITIVE
+Entity: 27360537
+Text: Hi Prince, could you assist me in maths on 5th October at 22836 Apt. 690? I have an 27360537 for you. If necessary, reach me at 04-614960-262832-4.
+
+Example 20
+Type: FALSE_POSITIVE
+Entity: 5114912473492968
+Text: Dear Addison, your secure 5114912473492968 number is used to track your Sexual and Reproductive Health records confidentially.
+
+Example 21
+Type: FALSE_POSITIVE
+Entity: 5579360497240662
+Text: Your childbirth readiness program at 90239 now accepts Burundi Franc payments. Please use your 5579360497240662 for transaction.
+
+Example 22
+Type: FALSE_POSITIVE
+Entity: 4587172594867838
+Text: Payment through visa for homeopathic medicine purchase has declined. Please update your 4587172594867838.
+
+Example 23
+Type: FALSE_POSITIVE
+Entity: 3992964841232336
+Text: We understand Coralie Emerson Kling that right now is tough, but we're here for you. Use code 3992964841232336 at 66283-9239 for affordable mental health services.
+
+Example 24
+Type: MISSED
+Entity: 1765
+Text: Hey Jace, we are in need of an extra Northeast vaccination clinic. Can we use your Main Street E location? Please reply to this text with your 1765 for approval.
+
+Example 25
+Type: MISSED
+Entity: 9610
+Text: Thank you, Luigi, for your payment of 510.093k Jordanian Dinar. Your receipt has been sent to Quentin78@yahoo.com. Use 9610 for secure access to invoices.
+
+Example 26
+Type: FALSE_POSITIVE
+Entity: 6468531246805803
+Text: Dear Parent, we failed to process the payment for your child’s tuition from your Money Market Account. The provided 6468531246805803 seems to be invalid. Please provide a working card.
+
+Example 27
+Type: MISSED
+Entity: 7660
+Text: Did you know that accounts of mental health issues have been rising in companies across the Pays de la Loire? It's no longer something we can keep hidden like a 7660 or swept under the rug. We need to address it now before it adversely affects productivity.
+
+Example 28
+Type: FALSE_POSITIVE
+Entity: 23rd
+Text: Dear Jaden, your scheduled family visit will be on the 23rd. They'll be driving the vehicle of plate number LR99REB, so security has been duly informed...
+
+Example 29
+Type: FALSE_POSITIVE
+Entity: 0416017701385121
+Text: Our sexual health section on the website had an unusual peak in traffic. The IP 9b46:ecda:8545:0c24:2c7d:ccba:9c3e:2c3f was displaying irregular behavior. They may have potentially intercepted sensitive patient information such as 0416017701385121...
+
+Example 30
+Type: MISSED
+Entity: 2358
+Text: Dear Isidro, to secure your data, please validate your PIN:2358 for handled devices at our centre.
+
+Example 31
+Type: FALSE_POSITIVE
+Entity: 75696024430
+Text: Mittie leading discussion on Health Informatics solutions at conference at 04996. Integrating AI with health measurements such as 3 feet 8 inches. Use your Credentials 75696024430 to access.
+
+Example 32
+Type: MISSED
+Entity: 0201
+Text: We set up outdoor learning day for Henry County school. Reach location at [-48.8186,54.4577] by November 25, 2019. Connect via 1bee:5fab:35a9:7eca:7b1f:397d:218d:e466 for real-time updates. Avoid sharing your 30/06/1924 and 0201. Any issue, contact Manager with 4c:9e:8e:da:90:69.
+
+Example 33
+Type: FALSE_POSITIVE
+Entity: 9336985312373447
+Text: You are tasked with overseeing inventory. We're particularly concerned about the 31499 location where stock levels have been inconsistent. We suspect an issue with product 9336985312373447. Please update us with a report through Roscoe_Feeney77@hotmail.com.
+
+Example 34
+Type: MISSED
+Entity: 7188
+Text: 26556 area has been chosen for the next stage of the trial. Charge 7188 amount on 3HrVjuVVo9BvHPJN2C3rMkUWWmw
+
+Example 35
+Type: MISSED
+Entity: 7359
+Text: Dear Miss Kunde, are you aware of the latest research in your field regarding diabetes management? I am looking forward to your insights. Please share them 7359 is the PIN to access the document.
+
+Example 36
+Type: FALSE_POSITIVE
+Entity: 51878
+Text: Send statements for our patient with a given 51878 and 8414361520113977 to our finance team.
+
+Example 37
+Type: FALSE_POSITIVE
+Entity: 8414361520113977
+Text: Send statements for our patient with a given 51878 and 8414361520113977 to our finance team.
+
+Example 38
+Type: FALSE_POSITIVE
+Entity: 7031712429765974
+Text: Hello Payton, could you provide the password 7031712429765974 from your nursing kit? It's needed for the server maintenance.
+
+Example 39
+Type: FALSE_POSITIVE
+Entity: 4031766637862705
+Text: Please ensure you carry the vaccination card issued on your name Lilyan during the visit. The attached digital barcode contains your 4031766637862705 for identification.
+
+Example 40
+Type: FALSE_POSITIVE
+Entity: 0415041638818545
+Text: Victoria, As a valued diagnostic technology customer, you're eligible for an upgrade available to your £SCR currency. Please note, your 0415041638818545 may be necessary to complete this transaction.
+
+Example 41
+Type: MISSED
+Entity: 8748
+Text: Please note that you will be required to submit your 4823819111630166, 594, and 8748 for payments required during the application process.
+
+Example 42
+Type: FALSE_POSITIVE
+Entity: 1068145907832016
+Text: A quick reminder to all participants to avoid sharing any sensitive information such as 1068145907832016 or 75662350799 with anyone posing to be our representatives.
+
+Example 43
+Type: FALSE_POSITIVE
+Entity: 4677971292861157
+Text: Dear Investment Account holder, your payment of ₨38k has been successfully made towards your Personal Loan Account. The transaction number for your reference is 4677971292861157. In case you notice any discrepancies, feel free to contact us.
+
+Example 44
+Type: MISSED
+Entity: 5797
+Text: To Eino, I took note of the 5797 you provided for the upcoming classes. Can I use the same for the remedial ones as well?
+
+Example 45
+Type: MISSED
+Entity: 6934
+Text: For those working in high temperatures, remember to stay hydrated. The first aid station is in Functionality, accessible using 6934.
+
+Example 46
+Type: FALSE_POSITIVE
+Entity: 6436463286360791
+Text: Hi, I am Kenton34, affiliated with X International. Trying to complete a payment but the system isn't accepting 6436463286360791. Can you help? Don't worry, it's 873.
+
+Example 47
+Type: MISSED
+Entity: 0822
+Text: Patient 04/08/1901 being discharged today. Personal items held in ICU locker number 0822 are being packed. They leave grateful and relieved.
+
+Example 48
+Type: FALSE_POSITIVE
+Entity: 2021
+Text: Following the amendments in the Car taxation laws in Avon county Grampian, can you kindly do research on how much tax we would currently pay if we were to buy a commercial vehicle specified by XT45BNZ? And how this would change if we were to buy the same type of vehicle but with a different Vehicle Identification Number DGZJ16FKK8K341353 in 2021?
+
+Example 49
+Type: FALSE_POSITIVE
+Entity: 44390
+Text: Our center in New Ardellaworth, offers various modalities of therapy and counseling targeted towards Gender and Sexuality. Could you please share your Zipcode 44390 to locate the nearest center?
+
+Example 50
+Type: FALSE_POSITIVE
+Entity: 9138912783543629
+Text: Celebrate the power of holistic education. Buy an inspirational poster from our Opera/14.70 (Macintosh; Intel Mac OS X 10.6.9 U; NL Presto/2.9.178 Version/10.00) store using 9138912783543629.
+
+
+Total analyzed errors: 373

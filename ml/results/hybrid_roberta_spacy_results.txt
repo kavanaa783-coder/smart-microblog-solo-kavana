@@ -1,0 +1,20 @@
+HYBRID RoBERTa + spaCy RESULTS
+======================================================================
+
+RoBERTa
+Precision : 0.9457
+Recall    : 0.9506
+F1-score  : 0.9482
+
+spaCy
+Precision : 0.9265
+Recall    : 0.9061
+F1-score  : 0.9162
+
+HYBRID — RoBERTa + spaCy
+Precision : 0.9357
+Recall    : 0.9551
+F1-score  : 0.9453
+Gold entities      : 8936
+Predicted entities : 9122
+Correct entities   : 8535

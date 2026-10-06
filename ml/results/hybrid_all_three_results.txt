@@ -1,0 +1,25 @@
+FINAL HYBRID — BERT + RoBERTa + spaCy
+======================================================================
+
+BERT
+Precision : 0.9450
+Recall    : 0.9518
+F1-score  : 0.9484
+
+RoBERTa
+Precision : 0.9457
+Recall    : 0.9506
+F1-score  : 0.9482
+
+spaCy
+Precision : 0.9265
+Recall    : 0.9061
+F1-score  : 0.9162
+
+HYBRID — BERT + RoBERTa + spaCy
+Precision : 0.9685
+Recall    : 0.9448
+F1-score  : 0.9565
+Gold entities      : 8936
+Predicted entities : 8718
+Correct entities   : 8443

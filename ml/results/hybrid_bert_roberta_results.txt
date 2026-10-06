@@ -1,0 +1,20 @@
+HYBRID BERT + RoBERTa EVALUATION
+======================================================================
+
+BERT
+Precision : 0.9450
+Recall    : 0.9518
+F1-score  : 0.9484
+
+RoBERTa
+Precision : 0.9457
+Recall    : 0.9506
+F1-score  : 0.9482
+
+HYBRID — BERT + RoBERTa
+Precision : 0.9718
+Recall    : 0.9359
+F1-score  : 0.9535
+Gold entities      : 8936
+Predicted entities : 8606
+Correct entities   : 8363

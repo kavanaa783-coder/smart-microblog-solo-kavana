@@ -1,0 +1,20 @@
+HYBRID BERT + spaCy EVALUATION
+======================================================================
+
+BERT
+Precision : 0.9450
+Recall    : 0.9518
+F1-score  : 0.9484
+
+spaCy
+Precision : 0.9265
+Recall    : 0.9061
+F1-score  : 0.9162
+
+HYBRID — BERT + spaCy
+Precision : 0.9696
+Recall    : 0.9110
+F1-score  : 0.9394
+Gold entities      : 8936
+Predicted entities : 8396
+Correct entities   : 8141

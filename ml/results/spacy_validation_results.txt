@@ -1,0 +1,36 @@
+CUSTOM SPACY NER - VALIDATION RESULTS
+============================================================
+
+Validation documents: 6525
+Gold entities: 14355
+Predicted entities: 14387
+Correct entities: 13444
+
+Precision: 0.9345
+Recall: 0.9365
+F1-score: 0.9355
+
+PER-ENTITY RESULTS
+------------------------------------------------------------
+ACCOUNT: Precision=0.8953, Recall=0.8914, F1=0.8933
+ADDRESS: Precision=0.9709, Recall=0.9434, F1=0.9569
+AGE: Precision=0.8874, Recall=0.8825, F1=0.8849
+BANK_ACCOUNT: Precision=0.9061, Recall=0.9091, F1=0.9076
+CREDIT_CARD: Precision=0.8892, Recall=0.8748, F1=0.8820
+CRYPTO_ADDRESS: Precision=0.9036, Recall=0.9369, F1=0.9199
+DATE: Precision=0.7474, Recall=0.9450, F1=0.8346
+DEVICE_ID: Precision=0.9787, Recall=0.9892, F1=0.9840
+DOB: Precision=0.8100, Recall=0.4320, F1=0.5635
+EMAIL: Precision=1.0000, Recall=1.0000, F1=1.0000
+IP_ADDRESS: Precision=0.9905, Recall=0.9924, F1=0.9914
+LOCATION: Precision=0.9669, Recall=0.9669, F1=0.9669
+MAC_ADDRESS: Precision=0.9709, Recall=0.9330, F1=0.9516
+PASSWORD: Precision=0.8603, Recall=0.8462, F1=0.8532
+PERSON: Precision=0.9722, Recall=0.9837, F1=0.9779
+PHONE: Precision=0.9892, Recall=0.9683, F1=0.9787
+PIN: Precision=0.5111, Recall=0.6509, F1=0.5726
+SSN: Precision=0.9080, Recall=0.9576, F1=0.9322
+URL: Precision=1.0000, Recall=1.0000, F1=1.0000
+USERNAME: Precision=0.9522, Recall=0.9799, F1=0.9658
+USER_AGENT: Precision=1.0000, Recall=1.0000, F1=1.0000
+VEHICLE_ID: Precision=0.9298, Recall=0.8721, F1=0.9000

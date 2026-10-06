@@ -1,0 +1,75 @@
+MODEL 2B — MEMORY-SAFE TF-IDF + SMOTE + RANDOM FOREST
+======================================================================
+
+Max TF-IDF features: 5000
+Maximum O samples: 60000
+Maximum samples per class: 3000
+SMOTE target: 3000
+SMOTE k-neighbors: 2
+
+Precision : 0.7551
+Recall    : 0.7340
+F1-score  : 0.6876
+SMOTE time : 3.23 seconds
+Training time : 16.79 seconds
+Inference time: 1.54 seconds
+
+                  precision    recall  f1-score   support
+
+       B-AADHAAR       0.54      0.54      0.54       787
+       B-ACCOUNT       0.24      0.39      0.30       388
+       B-ADDRESS       0.91      0.23      0.37      1457
+           B-AGE       0.28      0.45      0.34       168
+       B-API_KEY       0.54      0.74      0.63       293
+  B-BANK_ACCOUNT       0.21      0.48      0.29       125
+   B-CREDIT_CARD       0.52      0.27      0.36       564
+B-CRYPTO_ADDRESS       0.29      0.51      0.37       358
+          B-DATE       0.49      0.38      0.43       350
+     B-DEVICE_ID       0.65      0.09      0.16       138
+           B-DOB       0.64      0.51      0.57       654
+B-DRIVER_LICENSE       0.58      0.92      0.71       136
+         B-EMAIL       0.62      0.35      0.45      1244
+    B-IP_ADDRESS       0.56      0.38      0.45       781
+      B-LOCATION       0.46      0.02      0.04       578
+   B-MAC_ADDRESS       0.25      0.48      0.33        66
+           B-PAN       0.39      0.56      0.46       421
+      B-PASSPORT       0.45      0.65      0.53       201
+      B-PASSWORD       0.28      0.62      0.38       320
+        B-PERSON       0.00      0.00      0.00      3781
+         B-PHONE       0.76      0.29      0.42      1578
+           B-PIN       0.06      0.17      0.09        53
+           B-SSN       0.50      0.65      0.57       246
+        B-UPI_ID       0.47      0.42      0.44       655
+           B-URL       0.61      1.00      0.76       212
+      B-USERNAME       0.71      0.32      0.44       495
+    B-USER_AGENT       0.50      0.97      0.66       150
+   B-VEHICLE_REG       0.44      0.30      0.35       213
+       I-AADHAAR       0.90      0.31      0.46      2455
+       I-ACCOUNT       0.48      0.88      0.62       297
+       I-ADDRESS       1.00      0.02      0.03      8591
+           I-AGE       0.38      0.79      0.52       164
+       I-API_KEY       0.91      0.97      0.94       285
+   I-CREDIT_CARD       0.81      0.56      0.66       856
+          I-DATE       0.64      0.40      0.49      1500
+     I-DEVICE_ID       0.35      0.72      0.47       828
+           I-DOB       0.78      0.51      0.62      2652
+I-DRIVER_LICENSE       0.60      0.89      0.71       470
+         I-EMAIL       0.97      0.56      0.70      7826
+    I-IP_ADDRESS       0.89      0.47      0.62      7473
+      I-LOCATION       0.35      0.24      0.29       332
+   I-MAC_ADDRESS       0.34      0.74      0.47       660
+           I-PAN       0.31      0.30      0.31       310
+      I-PASSWORD       0.63      0.49      0.55       343
+        I-PERSON       1.00      0.00      0.00      4384
+         I-PHONE       0.83      0.37      0.51      4055
+           I-SSN       0.53      0.34      0.41       604
+        I-UPI_ID       0.66      0.71      0.69      3010
+           I-URL       0.97      0.69      0.81      1838
+      I-USERNAME       0.00      0.00      0.00       156
+    I-USER_AGENT       0.97      0.73      0.83      5206
+   I-VEHICLE_REG       0.22      0.41      0.29       306
+               O       0.75      0.95      0.83    114047
+
+        accuracy                           0.73    185060
+       macro avg       0.55      0.49      0.46    185060
+    weighted avg       0.76      0.73      0.69    185060

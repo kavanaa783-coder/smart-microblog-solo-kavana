@@ -1,0 +1,24 @@
+======================================================================
+MODEL 3 — BERT PII NER
+======================================================================
+
+Model: bert-base-uncased
+Training documents: 63224
+Validation documents: 7903
+Entity types: 28
+BIO labels: 57
+Max length: 128
+Epochs: 5
+Training time seconds: 15143.24
+Evaluation time seconds: 669.76
+
+OVERALL METRICS
+----------------------------------------------------------------------
+eval_loss: 0.016600018367171288
+eval_precision: 0.9834991506915797
+eval_recall: 0.9867916489135066
+eval_f1: 0.9851426488013854
+eval_runtime: 669.7403
+eval_samples_per_second: 11.8
+eval_steps_per_second: 11.8
+epoch: 5.0
