@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 15000,
 });
 
@@ -32,6 +32,21 @@ export const getFeed = async () => {
 export const deletePost = async (id) => {
   await api.delete(`/delete-post/${id}`);
   return true;
+};
+export const createReply = async (postId, content) => {
+  const username = getCurrentUsername();
+
+  const { data } = await api.post(`/post/${postId}/replies`, {
+    username,
+    content,
+  });
+
+  return data;
+};
+
+export const getReplies = async (postId) => {
+  const { data } = await api.get(`/post/${postId}/replies`);
+  return data?.replies || [];
 };
 
 export const getPost = async (id) => {

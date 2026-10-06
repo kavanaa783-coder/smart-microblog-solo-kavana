@@ -60,3 +60,98 @@
 .post-card__action--danger { margin-left: auto; }
 .post-card__action--danger:hover { background: var(--risk-high-soft); color: var(--risk-high); }
 .post-card__action--confirm { background: var(--risk-high-soft); color: var(--risk-high); font-weight: 700; }
+.post-card__replies {
+  margin-top: 10px;
+  padding: 12px 0 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.post-card__reply-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.post-card__reply-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-round);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--fs-xs);
+  outline: none;
+}
+
+.post-card__reply-form input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px var(--brand-soft);
+}
+
+.post-card__reply-form input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.post-card__reply-form button {
+  border: none;
+  border-radius: var(--r-round);
+  padding: 8px 14px;
+  background: var(--brand);
+  color: white;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.post-card__reply-form button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.post-card__reply-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.post-card__reply-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.post-card__reply {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+
+.post-card__reply strong {
+  flex-shrink: 0;
+  color: var(--text-primary);
+}
+
+.post-card__reply span {
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.post-card__reply-status {
+  padding: 6px 4px;
+  color: var(--text-tertiary);
+  font-size: var(--fs-xs);
+}
+
+.post-card__reply-error {
+  margin-bottom: 8px;
+  color: var(--risk-high);
+  font-size: var(--fs-xs);
+}

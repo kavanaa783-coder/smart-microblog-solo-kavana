@@ -1,73 +1,46 @@
 import re
 import spacy
 
-nlp = spacy.load("en_core_web_sm")
+
+# ---------------- SPACY MODEL ---------------- #
+
+try:
+    nlp = spacy.load("en_core_web_trf")
+except OSError as exc:
+    raise RuntimeError(
+        "The spaCy model 'en_core_web_trf' is missing. "
+        "Install it with: python -m spacy download en_core_web_trf"
+    ) from exc
+
 
 # ---------------- REGEX PATTERNS ---------------- #
 
 PHONE_PATTERN = re.compile(
-    r'\b(?:\+91[- ]?)?[6-9]\d{9}\b'
+    r"\b(?:\+91[- ]?)?[6-9]\d{9}\b"
 )
 
 EMAIL_PATTERN = re.compile(
-    r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+    r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
 )
 
 AADHAAR_PATTERN = re.compile(
-    r'\b\d{4}\s?\d{4}\s?\d{4}\b'
+    r"\b\d{4}\s?\d{4}\s?\d{4}\b"
 )
 
 PAN_PATTERN = re.compile(
-    r'\b[A-Z]{5}[0-9]{4}[A-Z]\b',
+    r"\b[A-Z]{5}[0-9]{4}[A-Z]\b",
     re.IGNORECASE
 )
 
 DOB_PATTERN = re.compile(
-    r'\b(?:0?[1-9]|[12][0-9]|3[01])[\/.-](?:0?[1-9]|1[0-2])[\/.-](?:19|20)\d{2}\b'
+    r"\b(?:0?[1-9]|[12][0-9]|3[01])[\/.-]"
+    r"(?:0?[1-9]|1[0-2])[\/.-]"
+    r"(?:19|20)\d{2}\b"
 )
 
-# ---------------- INDIAN LOCATIONS ---------------- #
 
-INDIAN_LOCATIONS = [
+# ---------------- KNOWN NAMES ---------------- #
 
-    # Karnataka
-    "bangalore","bengaluru","mangalore","mysore","udupi","hubli",
-    "dharwad","belgaum","shimoga","bellary","tumkur","hassan",
-
-    # Tamil Nadu
-    "chennai","madurai","coimbatore","salem","erode",
-    "tirunelveli","vellore","trichy","thoothukudi",
-
-    # Kerala
-    "kochi","kozhikode","thrissur","kollam","kannur","palakkad",
-
-    # Andhra Pradesh
-    "visakhapatnam","vijayawada","tirupati","guntur",
-
-    # Telangana
-    "hyderabad","warangal","karimnagar","nizamabad",
-
-    # Maharashtra
-    "mumbai","pune","nagpur","nashik",
-
-    # Delhi NCR
-    "delhi","new delhi","noida","gurgaon","faridabad",
-
-    # Gujarat
-    "ahmedabad","surat","rajkot","vadodara",
-
-    # Rajasthan
-    "jaipur","jodhpur","udaipur",
-
-    # Uttar Pradesh
-    "lucknow","kanpur","agra","varanasi",
-
-    # Goa
-    "goa","panaji",
-
-    # Others
-    "kolkata","patna","bhubaneswar","ranchi","indore","bhopal"
-]
 KNOWN_NAMES = [
     "mahima",
     "mahimashree",
@@ -81,7 +54,7 @@ KNOWN_NAMES = [
     "priyanka",
     "nandita",
     "ananya",
-    "aravind",  
+    "aravind",
     "madhumitha",
     "siddharth",
     "kavya",
@@ -94,15 +67,17 @@ KNOWN_NAMES = [
     "kiran",
     "deepak",
     "pooja",
-    "sneha",
     "vikram",
     "ajay",
     "vijay",
     "suresh",
     "ramesh",
     "apoorva",
-    "koushik"
+    "koushik",
 ]
+
+
+# ---------------- MAIN DETECTOR ---------------- #
 
 def detect_pii(text):
 
@@ -116,65 +91,136 @@ def detect_pii(text):
         "locations": []
     }
 
-    # ---------- REGEX ----------
+    # ---------- REGEX DETECTION ---------- #
 
-    result["phones"] = list(set(PHONE_PATTERN.findall(text)))
-    result["emails"] = list(set(EMAIL_PATTERN.findall(text)))
-    result["aadhaars"] = list(set(AADHAAR_PATTERN.findall(text)))
-    result["pans"] = list(set(PAN_PATTERN.findall(text)))
+    result["phones"] = list(
+        dict.fromkeys(PHONE_PATTERN.findall(text))
+    )
+
+    result["emails"] = list(
+        dict.fromkeys(EMAIL_PATTERN.findall(text))
+    )
+
+    result["aadhaars"] = list(
+        dict.fromkeys(AADHAAR_PATTERN.findall(text))
+    )
+
+    result["pans"] = list(
+        dict.fromkeys(PAN_PATTERN.findall(text))
+    )
 
     result["dobs"] = [
-        m.group(0)
-        for m in DOB_PATTERN.finditer(text)
+        match.group(0)
+        for match in DOB_PATTERN.finditer(text)
     ]
 
-    # ---------- SPACY ----------
+
+    # ---------- SPACY ENTITY DETECTION ---------- #
 
     doc = nlp(text)
 
-    print("\n========== SPACY ==========")
+    dob_values = {
+        value.lower()
+        for value in result["dobs"]
+    }
 
-    for ent in doc.ents:
-        print(ent.text, "---->", ent.label_)
-
-    print("===========================\n")
-
+    # First pass:
+    # collect PERSON entities and conceptual location entities.
     for ent in doc.ents:
 
         value = ent.text.strip()
 
+        if not value:
+            continue
+
+        if value.lower() in dob_values:
+            continue
+
         if ent.label_ == "PERSON":
+            result["persons"].append(value)
 
-            if value.lower() in INDIAN_LOCATIONS:
-                result["locations"].append(value.title())
-            else:
-                result["persons"].append(value)
+        elif ent.label_ in {"GPE", "LOC", "FAC"}:
+            result["locations"].append(value)
 
-        elif ent.label_ in ["GPE", "LOC"]:
 
-            result["locations"].append(value.title())
+    # ---------- KNOWN NAME FALLBACK ---------- #
 
-    # ---------- Manual Indian Location Detection ----------
-
-    lower = text.lower()
-
-    for city in INDIAN_LOCATIONS:
-        if city in lower:
-            result["locations"].append(city.title())
-
-    # Manual person detection
+    lower_text = text.lower()
 
     for name in KNOWN_NAMES:
-        if name in lower:
-             result["persons"].append(name.title())
 
-    # ---------- Remove Duplicates ----------
+        pattern = rf"\b{re.escape(name)}\b"
 
-    result["persons"] = list(set(result["persons"]))
-    result["locations"] = list(set(result["locations"]))
+        if re.search(pattern, lower_text):
+
+            formatted_name = name.title()
+
+            if formatted_name not in result["persons"]:
+
+                result["persons"].append(formatted_name)
+
+
+    # ---------- RESOLVE PERSON / LOCATION CONFLICT ---------- #
+
+    person_values = {
+        person.strip().lower()
+        for person in result["persons"]
+    }
+
+    cleaned_locations = []
+
+    for location in result["locations"]:
+
+        location_value = location.strip()
+
+        if not location_value:
+            continue
+
+        # If the same entity is already recognized as a person,
+        # do not report it as a location.
+        if location_value.lower() in person_values:
+            continue
+
+        cleaned_locations.append(location_value)
+
+
+    result["locations"] = cleaned_locations
+
+
+    # ---------- REMOVE DUPLICATES ---------- #
+
+    result["phones"] = list(
+        dict.fromkeys(result["phones"])
+    )
+
+    result["emails"] = list(
+        dict.fromkeys(result["emails"])
+    )
+
+    result["aadhaars"] = list(
+        dict.fromkeys(result["aadhaars"])
+    )
+
+    result["pans"] = list(
+        dict.fromkeys(result["pans"])
+    )
+
+    result["dobs"] = list(
+        dict.fromkeys(result["dobs"])
+    )
+
+    result["persons"] = list(
+        dict.fromkeys(result["persons"])
+    )
+
+    result["locations"] = list(
+        dict.fromkeys(result["locations"])
+    )
 
     return result
 
+
+# ---------------- TEST ---------------- #
 
 if __name__ == "__main__":
 

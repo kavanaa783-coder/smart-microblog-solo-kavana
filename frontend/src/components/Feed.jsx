@@ -14,7 +14,7 @@ export default function Feed({ posts, loading, error, searchTerm, onDelete }) {
     return (
       <EmptyState
         title="Couldn't load the feed"
-        subtitle="Check that the FastAPI backend is running and VITE_API_BASE_URL is correct."
+        subtitle="The backend could not reach PostgreSQL. Check DATABASE_URL and make sure the database is running."
       />
     );
   }
