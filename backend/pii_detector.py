@@ -204,6 +204,10 @@ def _detect_context_locations(text: str, protected_spans):
 
             value = match.group(1)
 
+            if value.casefold() in {"my", "me", "i", "we", "us", "you", "he", "she", "they", "it"}:
+
+                continue
+
             if _overlaps(start, end, protected_spans):
 
                 continue
@@ -266,6 +270,10 @@ def _detect_model_entities(text: str, protected_spans):
 
             continue
 
+        if not any(character.isalnum() for character in ent.text):
+
+            continue
+
         label = ent.label_
 
         # Correct person predictions when the surrounding text
@@ -301,6 +309,10 @@ def _detect_model_entities(text: str, protected_spans):
     for ent in general_doc.ents:
 
         if ent.label_ not in {"PERSON", "GPE", "LOC"}:
+
+            continue
+
+        if not any(character.isalnum() for character in ent.text):
 
             continue
 

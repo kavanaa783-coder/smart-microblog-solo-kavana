@@ -24,7 +24,9 @@ export const savePost = async ({ content, scan }) => {
 };
 
 export const getFeed = async () => {
-  const { data } = await api.get('/get-feed');
+  const { data } = await api.get('/get-feed', {
+    params: { username: getCurrentUsername() },
+  });
   const list = Array.isArray(data) ? data : data?.posts || [];
   return list.map(normalizePost);
 };
@@ -32,6 +34,20 @@ export const getFeed = async () => {
 export const deletePost = async (id) => {
   await api.delete(`/delete-post/${id}`);
   return true;
+};
+
+export const toggleLike = async (postId) => {
+  const { data } = await api.post(`/post/${postId}/like`, {
+    username: getCurrentUsername(),
+  });
+  return data;
+};
+
+export const toggleRepost = async (postId) => {
+  const { data } = await api.post(`/post/${postId}/repost`, {
+    username: getCurrentUsername(),
+  });
+  return data;
 };
 export const createReply = async (postId, content) => {
   const username = getCurrentUsername();
@@ -83,6 +99,7 @@ export const saveProfile = async ({
   });
   const profile = normalizeProfile(data);
   localStorage.setItem('username', profile.username || username);
+  window.dispatchEvent(new Event('profile-updated'));
   return profile;
 };
 
@@ -136,6 +153,10 @@ function normalizePost(data = {}) {
     riskScore: data.risk_score ?? 0,
     riskLevel: (data.risk_level || 'LOW').toUpperCase(),
     entities: data.detected_entities || {},
+    likeCount: data.like_count ?? 0,
+    likedByUser: Boolean(data.liked_by_user),
+    repostCount: data.repost_count ?? 0,
+    repostedByUser: Boolean(data.reposted_by_user),
     createdAt: data.timestamp || new Date().toISOString(),
   };
 }

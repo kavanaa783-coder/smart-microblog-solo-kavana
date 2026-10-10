@@ -20,9 +20,10 @@ export default function RiskMeter({ scanning, result, idle }) {
 
   const entities = result?.entities || {};
 
-  const detectedTypes = Object.entries(entities).filter(([, values]) =>
-    Array.isArray(values) ? values.length > 0 : Boolean(values)
-  );
+  const detectedTypes = Object.entries(entities).filter(([, values]) => {
+    if (Array.isArray(values)) return values.length > 0;
+    return values !== null && values !== undefined && values !== '';
+  });
 
   return (
     <div className="risk-meter">
@@ -42,13 +43,11 @@ export default function RiskMeter({ scanning, result, idle }) {
             r={RADIUS}
             stroke={color}
             strokeDasharray={CIRCUMFERENCE}
+            initial={{ strokeDashoffset: CIRCUMFERENCE }}
             animate={{
               strokeDashoffset: idle ? CIRCUMFERENCE : offset,
             }}
-            transition={{
-              duration: 0.5,
-              ease: 'easeOut',
-            }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           />
         </svg>
 
@@ -60,19 +59,12 @@ export default function RiskMeter({ scanning, result, idle }) {
       <div className="risk-meter__body">
         <div className="risk-meter__label">
           {scanning && <span className="risk-meter__pulse" />}
-
-          {scanning
-            ? 'Scanning as you type…'
-            : 'Live Risk Meter'}
+          {scanning ? 'Scanning as you type…' : 'Live Risk Meter'}
         </div>
 
         <div
           className="risk-meter__level"
-          style={{
-            color: idle
-              ? 'var(--text-tertiary)'
-              : color,
-          }}
+          style={{ color: idle ? 'var(--text-tertiary)' : color }}
         >
           {idle ? 'Start typing to see risk' : level}
         </div>
@@ -80,14 +72,9 @@ export default function RiskMeter({ scanning, result, idle }) {
         {detectedTypes.length > 0 && (
           <div className="risk-meter__entities">
             {detectedTypes.map(([type, values]) => (
-              <span
-                key={type}
-                className="risk-meter__chip"
-              >
+              <span key={type} className="risk-meter__chip">
                 ✔ {formatEntityLabel(type)}:{' '}
-                {Array.isArray(values)
-                  ? values.join(', ')
-                  : values}
+                {formatEntityValues(values)}
               </span>
             ))}
           </div>
@@ -101,4 +88,40 @@ function formatEntityLabel(key) {
   return key
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatEntityValues(values) {
+  if (Array.isArray(values)) {
+    return values.map(formatEntityValue).filter(Boolean).join(', ');
+  }
+
+  return formatEntityValue(values);
+}
+
+function formatEntityValue(value) {
+  if (value === null || value === undefined) return '';
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value);
+  }
+
+  if (typeof value === 'object') {
+    const label =
+      value.text ??
+      value.name ??
+      value.entity ??
+      value.value ??
+      value.label;
+
+    if (label !== undefined && label !== null) {
+      return String(label);
+    }
+
+    return Object.values(value)
+      .filter((item) => typeof item === 'string' || typeof item === 'number')
+      .map(String)
+      .join(' ');
+  }
+
+  return String(value);
 }

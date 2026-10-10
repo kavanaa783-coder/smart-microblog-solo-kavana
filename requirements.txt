@@ -5,3 +5,5 @@ pydantic
 python-dotenv
 psycopg2-binary
 pytest
+scikit-learn
+joblib

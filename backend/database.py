@@ -71,6 +71,53 @@ def init_db():
             );
         """)
 
+        # Bookmarks table
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS bookmarks(
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id, post_id)
+            );
+        """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS post_likes(
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id, post_id)
+            );
+        """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS reposts(
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id, post_id)
+            );
+        """)
+
+        # Direct messages
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS messages(
+                id SERIAL PRIMARY KEY,
+                sender_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                recipient_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CHECK (sender_id <> recipient_id)
+            );
+        """)
+        cur.execute("""
+            CREATE INDEX IF NOT EXISTS messages_conversation_idx
+            ON messages(sender_id, recipient_id, created_at);
+        """)
+
         conn.commit()
 
     except Exception as exc:
@@ -129,7 +176,7 @@ def save_post_to_db(user_id, content, risk_level, risk_score):
 # Get All Posts
 # ==========================================
 
-def get_all_posts():
+def get_all_posts(username=None):
     conn = get_connection()
     cur = conn.cursor()
 
@@ -141,12 +188,24 @@ def get_all_posts():
                 posts.content,
                 posts.risk_level,
                 posts.risk_score,
-                posts.timestamp
+                posts.timestamp,
+                (SELECT COUNT(*) FROM post_likes WHERE post_likes.post_id = posts.id),
+                EXISTS (
+                    SELECT 1 FROM post_likes
+                    JOIN users ON users.id = post_likes.user_id
+                    WHERE post_likes.post_id = posts.id AND users.username = %s
+                ),
+                (SELECT COUNT(*) FROM reposts WHERE reposts.post_id = posts.id),
+                EXISTS (
+                    SELECT 1 FROM reposts
+                    JOIN users ON users.id = reposts.user_id
+                    WHERE reposts.post_id = posts.id AND users.username = %s
+                )
             FROM posts
             JOIN users
                 ON posts.user_id = users.id
             ORDER BY posts.id DESC
-        """)
+        """, (username or "", username or ""))
 
         rows = cur.fetchall()
 
@@ -164,6 +223,10 @@ def get_all_posts():
             "risk_level": row[3],
             "risk_score": row[4],
             "timestamp": row[5],
+            "like_count": row[6],
+            "liked_by_user": row[7],
+            "repost_count": row[8],
+            "reposted_by_user": row[9],
         })
 
     return posts
@@ -292,6 +355,154 @@ def save_reply_to_db(post_id, user_id, content):
         "id": row[0],
         "timestamp": row[1],
     }
+
+
+# ==========================================
+# Bookmarks
+# ==========================================
+
+def save_bookmark_to_db(user_id, post_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            INSERT INTO bookmarks(user_id, post_id)
+            VALUES (%s, %s)
+            ON CONFLICT (user_id, post_id) DO NOTHING
+            RETURNING id, created_at
+            """,
+            (user_id, post_id),
+        )
+        row = cur.fetchone()
+        conn.commit()
+
+    except Exception as exc:
+        conn.rollback()
+        raise RuntimeError(
+            "Unable to save the bookmark because the database connection is not available."
+        ) from exc
+
+    finally:
+        cur.close()
+        conn.close()
+
+    if row is None:
+        return {"id": None, "created_at": None}
+
+    return {
+        "id": row[0],
+        "created_at": row[1],
+    }
+
+
+def get_bookmarks_for_user(username):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            SELECT
+                bookmarks.id,
+                bookmarks.post_id,
+                users.username,
+                posts.content,
+                posts.risk_level,
+                posts.risk_score,
+                posts.timestamp,
+                bookmarks.created_at
+            FROM bookmarks
+            JOIN users ON bookmarks.user_id = users.id
+            JOIN posts ON bookmarks.post_id = posts.id
+            WHERE users.username = %s
+            ORDER BY bookmarks.created_at DESC
+            """,
+            (username,),
+        )
+        rows = cur.fetchall()
+    finally:
+        cur.close()
+        conn.close()
+
+    bookmarks = []
+    for row in rows:
+        bookmarks.append({
+            "id": row[0],
+            "post_id": row[1],
+            "username": row[2],
+            "content": row[3],
+            "risk_level": row[4],
+            "risk_score": row[5],
+            "timestamp": row[6],
+            "created_at": row[7],
+        })
+
+    return bookmarks
+
+
+def delete_bookmark_from_db(user_id, post_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            DELETE FROM bookmarks
+            WHERE user_id = %s AND post_id = %s
+            """,
+            (user_id, post_id),
+        )
+        conn.commit()
+    finally:
+        cur.close()
+        conn.close()
+
+
+def toggle_post_like(user_id, post_id):
+    return _toggle_post_action("post_likes", user_id, post_id)
+
+
+def toggle_post_repost(user_id, post_id):
+    return _toggle_post_action("reposts", user_id, post_id)
+
+
+def _toggle_post_action(table, user_id, post_id):
+    if table not in {"post_likes", "reposts"}:
+        raise ValueError("Unsupported post action table")
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            f"SELECT 1 FROM {table} WHERE user_id = %s AND post_id = %s",
+            (user_id, post_id),
+        )
+        exists = cur.fetchone() is not None
+
+        if exists:
+            cur.execute(
+                f"DELETE FROM {table} WHERE user_id = %s AND post_id = %s",
+                (user_id, post_id),
+            )
+        else:
+            cur.execute(
+                f"INSERT INTO {table}(user_id, post_id) VALUES (%s, %s)",
+                (user_id, post_id),
+            )
+
+        cur.execute(f"SELECT COUNT(*) FROM {table} WHERE post_id = %s", (post_id,))
+        count = cur.fetchone()[0]
+        conn.commit()
+        return {"active": not exists, "count": count}
+    except Exception as exc:
+        conn.rollback()
+        raise RuntimeError("Unable to update this post action right now.") from exc
+    finally:
+        cur.close()
+        conn.close()
 
 
 # ==========================================
@@ -439,3 +650,134 @@ def update_user(username, bio, profile_image=""):
     finally:
         cur.close()
         conn.close()
+
+
+def rename_user(current_username, username, bio, profile_image=""):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            UPDATE users
+            SET username = %s, bio = %s, profile_image = %s
+            WHERE username = %s
+            RETURNING id
+            """,
+            (username, bio, profile_image, current_username),
+        )
+        row = cur.fetchone()
+        conn.commit()
+    except Exception as exc:
+        conn.rollback()
+        raise RuntimeError("Unable to update the username right now.") from exc
+    finally:
+        cur.close()
+        conn.close()
+
+    if row is None:
+        raise RuntimeError("The current profile could not be found.")
+
+    return row[0]
+
+
+# ==========================================
+# Direct Messages
+# ==========================================
+
+def save_message_to_db(sender_id, recipient_id, content):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            INSERT INTO messages(sender_id, recipient_id, content)
+            VALUES (%s, %s, %s)
+            RETURNING id, created_at
+            """,
+            (sender_id, recipient_id, content),
+        )
+        row = cur.fetchone()
+        conn.commit()
+    except Exception as exc:
+        conn.rollback()
+        raise RuntimeError("Unable to save the message right now.") from exc
+    finally:
+        cur.close()
+        conn.close()
+
+    return {"id": row[0], "created_at": row[1]}
+
+
+def get_messages_between_users(username, other_username):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            SELECT messages.id, sender.username, recipient.username,
+                   messages.content, messages.created_at
+            FROM messages
+            JOIN users AS sender ON sender.id = messages.sender_id
+            JOIN users AS recipient ON recipient.id = messages.recipient_id
+            WHERE (sender.username = %s AND recipient.username = %s)
+               OR (sender.username = %s AND recipient.username = %s)
+            ORDER BY messages.created_at ASC, messages.id ASC
+            """,
+            (username, other_username, other_username, username),
+        )
+        rows = cur.fetchall()
+    finally:
+        cur.close()
+        conn.close()
+
+    return [
+        {
+            "id": row[0],
+            "sender": row[1],
+            "recipient": row[2],
+            "content": row[3],
+            "created_at": row[4],
+        }
+        for row in rows
+    ]
+
+
+def get_message_conversations(username):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            SELECT username, last_message, updated_at
+            FROM (
+                SELECT DISTINCT ON (partner.username)
+                       partner.username,
+                       messages.content AS last_message,
+                       messages.created_at AS updated_at
+                FROM messages
+                JOIN users AS sender ON sender.id = messages.sender_id
+                JOIN users AS recipient ON recipient.id = messages.recipient_id
+                JOIN users AS partner ON partner.id = CASE
+                    WHEN sender.username = %s THEN recipient.id
+                    ELSE sender.id
+                END
+                WHERE sender.username = %s OR recipient.username = %s
+                ORDER BY partner.username, messages.created_at DESC, messages.id DESC
+            ) AS conversations
+            ORDER BY updated_at DESC, username ASC
+            """,
+            (username, username, username),
+        )
+        rows = cur.fetchall()
+    finally:
+        cur.close()
+        conn.close()
+
+    return [
+        {"username": row[0], "last_message": row[1], "updated_at": row[2]}
+        for row in rows
+    ]

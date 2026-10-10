@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useOutletContext } from 'react-router-dom';
 import {
   FiHeart,
   FiMessageCircle,
@@ -9,7 +10,14 @@ import {
   FiTrash2,
 } from 'react-icons/fi';
 import RiskBadge from './RiskBadge';
-import { createReply, getReplies, toggleBookmark, removeBookmark } from '../api/client';
+import {
+  createReply,
+  getReplies,
+  toggleBookmark,
+  removeBookmark,
+  toggleLike,
+  toggleRepost,
+} from '../api/client';
 import './PostCard.css';
 
 function timeAgo(iso) {
@@ -27,9 +35,16 @@ function timeAgo(iso) {
 }
 
 export default function PostCard({ post, onDelete }) {
-  const [liked, setLiked] = useState(false);
+  const outletContext = useOutletContext();
+  const showToast = outletContext?.showToast;
+  const [liked, setLiked] = useState(Boolean(post.likedByUser));
+  const [likeCount, setLikeCount] = useState(post.likeCount || 0);
+  const [reposted, setReposted] = useState(Boolean(post.repostedByUser));
+  const [repostCount, setRepostCount] = useState(post.repostCount || 0);
+  const [updatingLike, setUpdatingLike] = useState(false);
+  const [updatingRepost, setUpdatingRepost] = useState(false);
+  const [actionError, setActionError] = useState('');
   const [bookmarked, setBookmarked] = useState(false);
-  const [likeCount, setLikeCount] = useState(() => Math.floor(Math.random() * 40));
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const [showReplies, setShowReplies] = useState(false);
@@ -109,6 +124,50 @@ export default function PostCard({ post, onDelete }) {
     }
   };
 
+  const handleLikeToggle = async () => {
+    if (updatingLike) return;
+    const previousLiked = liked;
+    const previousCount = likeCount;
+    setLiked(!previousLiked);
+    setLikeCount(Math.max(0, previousCount + (previousLiked ? -1 : 1)));
+    setUpdatingLike(true);
+    setActionError('');
+
+    try {
+      const result = await toggleLike(post.id);
+      setLiked(result.liked);
+      setLikeCount(result.like_count);
+    } catch {
+      setLiked(previousLiked);
+      setLikeCount(previousCount);
+      setActionError('Like could not be saved. Try again.');
+    } finally {
+      setUpdatingLike(false);
+    }
+  };
+
+  const handleRepostToggle = async () => {
+    if (updatingRepost) return;
+    const previousReposted = reposted;
+    const previousCount = repostCount;
+    setReposted(!previousReposted);
+    setRepostCount(Math.max(0, previousCount + (previousReposted ? -1 : 1)));
+    setUpdatingRepost(true);
+    setActionError('');
+
+    try {
+      const result = await toggleRepost(post.id);
+      setReposted(result.reposted);
+      setRepostCount(result.repost_count);
+    } catch {
+      setReposted(previousReposted);
+      setRepostCount(previousCount);
+      setActionError('Repost could not be saved. Try again.');
+    } finally {
+      setUpdatingRepost(false);
+    }
+  };
+
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/post/${post.id}`;
 
@@ -119,12 +178,14 @@ export default function PostCard({ post, onDelete }) {
           text: post.content,
           url: shareUrl,
         });
+        showToast?.('Post shared');
       } else {
-        await navigator.clipboard.writeText(shareUrl);
-        alert('Post link copied!');
+        await copyText(shareUrl);
+        showToast?.('Post link copied');
       }
-    } catch {
-      // User cancelled the native share dialog.
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      setActionError('Could not share this post. Please try again.');
     }
   };
 
@@ -170,22 +231,21 @@ export default function PostCard({ post, onDelete }) {
             </button>
 
             <button
-              className="post-card__action"
-              title="Repost"
-              onClick={() => alert('Repost will be added next.')}
+              className={`post-card__action ${reposted ? 'post-card__action--saved' : ''}`}
+              title={reposted ? 'Undo repost' : 'Repost'}
+              onClick={handleRepostToggle}
+              disabled={updatingRepost}
             >
               <FiRepeat size={16} />
-              <span>Repost</span>
+              <span>{reposted ? 'Reposted' : 'Repost'}{repostCount > 0 ? ` · ${repostCount}` : ''}</span>
             </button>
 
             <button
               className={`post-card__action ${
                 liked ? 'post-card__action--liked' : ''
               }`}
-              onClick={() => {
-                setLiked((current) => !current);
-                setLikeCount((current) => current + (liked ? -1 : 1));
-              }}
+              onClick={handleLikeToggle}
+              disabled={updatingLike}
               title="Like"
             >
               <FiHeart
@@ -227,6 +287,12 @@ export default function PostCard({ post, onDelete }) {
               {confirmingDelete && <span>Confirm</span>}
             </button>
           </div>
+
+          {actionError && (
+            <div role="status" className="post-card__reply-error">
+              {actionError}
+            </div>
+          )}
 
           {showReplies && (
             <div className="post-card__replies">
@@ -284,4 +350,29 @@ export default function PostCard({ post, onDelete }) {
       </div>
     </motion.article>
   );
+}
+
+async function copyText(value) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {
+      // Continue to the compatibility fallback below.
+    }
+  }
+
+  const input = document.createElement('textarea');
+  input.value = value;
+  input.setAttribute('readonly', '');
+  input.style.position = 'fixed';
+  input.style.opacity = '0';
+  document.body.appendChild(input);
+  input.select();
+  const copied = document.execCommand('copy');
+  input.remove();
+
+  if (!copied) {
+    throw new Error('Clipboard copy was not available');
+  }
 }

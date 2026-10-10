@@ -5,3 +5,19 @@ __pycache__/
 .env
 node_modules/
 build/
+# Large trained model weights and checkpoints
+ml/models/*/model.safetensors
+ml/models/*/training_args.bin
+ml/models/*/checkpoints/
+ml/models/roberta_pii/checkpoints/
+
+# Training datasets and generated data
+ml/data/
+research_paper_evidence/processed/
+
+# Temporary backups
+*.bak
+backend/pii_detector_backup.py
+
+# Frontend build output
+frontend/dist/

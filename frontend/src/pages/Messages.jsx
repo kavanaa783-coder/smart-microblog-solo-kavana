@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { FiMessageCircle, FiSend } from 'react-icons/fi';
 import { getConversations, getCurrentUsername, getMessages, sendMessage } from '../api/client';
+import './Messages.css';
 
 function timeLabel(value) {
   if (!value) return '';
@@ -22,6 +23,14 @@ export default function Messages() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const messageListRef = useRef(null);
+
+  useEffect(() => {
+    messageListRef.current?.scrollTo({
+      top: messageListRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [messages]);
 
   const refreshConversations = useCallback(async (preferredUser = '') => {
     try {
@@ -91,6 +100,7 @@ export default function Messages() {
       setMessages((current) => [...current, saved]);
       setDraft('');
       await refreshConversations(activeUser);
+      showToast('Message sent');
     } catch (err) {
       const detail = err?.response?.data?.detail;
       setError(detail || 'Message could not be sent. Check the API and database, then try again.');
@@ -103,100 +113,111 @@ export default function Messages() {
     <main className="main-col">
       <div className="page-header">
         <h1>Messages</h1>
-        <p>Enter a username to start a private conversation and send a message.</p>
+        <p>Your private conversations, saved between visits.</p>
       </div>
 
-      <div className="page-body" style={{ display: 'grid', gridTemplateColumns: 'minmax(220px, 0.75fr) minmax(0, 1.6fr)', minHeight: 560 }}>
-        <aside style={{ borderRight: '1px solid var(--border)', padding: 16 }}>
-          <form onSubmit={startConversation} style={{ display: 'grid', gap: 8, marginBottom: 18 }}>
-            <label htmlFor="message-recipient" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Start a conversation</label>
-            <div style={{ display: 'flex', gap: 8 }}>
+      <div className="page-body messages-page">
+        <aside className="messages-sidebar">
+          <form onSubmit={startConversation} className="messages-start-form">
+            <label htmlFor="message-recipient" className="messages-section-label">New conversation</label>
+            <div className="messages-recipient-control">
               <input
                 id="message-recipient"
                 value={recipientInput}
                 onChange={(event) => setRecipientInput(event.target.value)}
-                placeholder="Recipient username"
+                placeholder="Username"
                 autoComplete="off"
-                style={{ width: 0, minWidth: 0, flex: '1 1 0%', border: '1px solid var(--border)', background: 'var(--surface-alt)', color: 'var(--text-primary)', borderRadius: 10, padding: '10px 12px' }}
+                aria-label="Recipient username"
               />
-              <button type="submit" aria-label="Open conversation" title="Open conversation" style={{ border: 0, borderRadius: 10, padding: '0 12px', background: 'var(--brand)', color: '#fff', cursor: 'pointer' }}>
-                <FiMessageCircle />
+              <button type="submit" className="messages-icon-button" aria-label="Open conversation" title="Open conversation" disabled={!recipientInput.trim()}>
+                <FiMessageCircle size={15} />
+                <span>Open</span>
               </button>
             </div>
           </form>
 
-          <strong style={{ display: 'block', marginBottom: 10 }}>Conversations</strong>
-          {loadingConversations ? <p style={{ color: 'var(--text-tertiary)' }}>Loading…</p> : null}
+          <div className="messages-list-heading">
+            <h2>Conversations</h2>
+            {!loadingConversations && <span>{conversations.length}</span>}
+          </div>
+          {loadingConversations ? <p className="messages-muted">Loading conversations…</p> : null}
           {!loadingConversations && conversations.length === 0 ? (
-            <p style={{ color: 'var(--text-tertiary)', fontSize: '0.85rem', lineHeight: 1.5 }}>No messages yet. Enter a username above to start one.</p>
+            <p className="messages-muted">No conversations yet. Start one above.</p>
           ) : null}
-          <div style={{ display: 'grid', gap: 6 }}>
+          <div className="messages-conversation-list">
             {conversations.map((conversation) => (
               <button
                 key={conversation.username}
                 type="button"
                 onClick={() => setActiveUser(conversation.username)}
-                style={{ textAlign: 'left', border: 0, borderRadius: 12, padding: 12, cursor: 'pointer', color: 'var(--text-primary)', background: activeUser === conversation.username ? 'var(--brand-soft)' : 'transparent' }}
+                className={`messages-conversation ${activeUser === conversation.username ? 'messages-conversation--active' : ''}`}
               >
-                <strong>{conversation.username}</strong>
-                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 4, color: 'var(--text-secondary)', fontSize: '0.78rem' }}>{conversation.last_message}</span>
-                <span style={{ display: 'block', marginTop: 4, color: 'var(--text-tertiary)', fontSize: '0.7rem' }}>{timeLabel(conversation.updated_at)}</span>
+                <span className="messages-avatar" aria-hidden="true">{conversation.username.slice(0, 1).toUpperCase()}</span>
+                <span className="messages-conversation-copy">
+                  <strong>{conversation.username}</strong>
+                  <span className="messages-preview">{conversation.last_message}</span>
+                </span>
+                <time>{timeLabel(conversation.updated_at)}</time>
               </button>
             ))}
           </div>
         </aside>
 
-        <section style={{ padding: 16, display: 'flex', minWidth: 0, flexDirection: 'column', minHeight: 520 }}>
+        <section className="messages-thread">
           {activeUser ? (
             <>
-              <header style={{ padding: '8px 0 14px', borderBottom: '1px solid var(--border)' }}>
-                <strong>{activeUser}</strong>
-                <div style={{ color: 'var(--text-tertiary)', fontSize: '0.78rem', marginTop: 3 }}>Conversation with @{activeUser}</div>
+              <header className="messages-thread-header">
+                <span className="messages-avatar messages-avatar--large" aria-hidden="true">{activeUser.slice(0, 1).toUpperCase()}</span>
+                <div>
+                  <strong>{activeUser}</strong>
+                  <span>Private conversation</span>
+                </div>
               </header>
 
-              <div aria-live="polite" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', padding: '18px 2px' }}>
-                {loadingMessages ? <p style={{ color: 'var(--text-tertiary)' }}>Loading messages…</p> : null}
+              <div className="messages-scroll" aria-live="polite" ref={messageListRef}>
+                {loadingMessages ? <p className="messages-muted messages-status">Loading messages…</p> : null}
                 {!loadingMessages && messages.length === 0 ? (
-                  <div style={{ margin: 'auto', maxWidth: 300, textAlign: 'center', color: 'var(--text-tertiary)' }}>
+                  <div className="messages-empty-thread">
                     <FiMessageCircle size={26} />
-                    <p>No messages in this conversation yet. Say hello below.</p>
+                    <strong>No messages yet</strong>
+                    <p>Send the first message to {activeUser}.</p>
                   </div>
                 ) : null}
                 {messages.map((message) => {
                   const mine = message.sender === username;
                   return (
-                    <div key={message.id} style={{ display: 'flex', justifyContent: mine ? 'flex-end' : 'flex-start' }}>
-                      <div style={{ maxWidth: '78%', borderRadius: 14, padding: '10px 13px', background: mine ? 'var(--brand)' : 'var(--surface-alt)', color: mine ? '#fff' : 'var(--text-primary)', overflowWrap: 'anywhere' }}>
-                        <div>{message.content}</div>
-                        <time style={{ display: 'block', marginTop: 5, fontSize: '0.68rem', opacity: 0.75 }}>{timeLabel(message.created_at)}</time>
+                    <div key={message.id} className={`messages-row ${mine ? 'messages-row--mine' : ''}`}>
+                      <div className={`messages-bubble ${mine ? 'messages-bubble--mine' : ''}`}>
+                        <p>{message.content}</p>
+                        <time>{mine ? 'You · ' : ''}{timeLabel(message.created_at)}</time>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              <form onSubmit={handleSend} style={{ display: 'flex', gap: 10, borderTop: '1px solid var(--border)', paddingTop: 14 }}>
+              <form onSubmit={handleSend} className="messages-compose">
                 <input
                   aria-label="Message text"
                   value={draft}
                   onChange={(event) => setDraft(event.target.value)}
                   placeholder={`Message @${activeUser}`}
                   maxLength={2000}
-                  style={{ width: 0, minWidth: 0, flex: '1 1 0%', border: '1px solid var(--border)', background: 'var(--surface-alt)', color: 'var(--text-primary)', borderRadius: 999, padding: '12px 16px' }}
+                  disabled={sending}
                 />
                 <button className="composer__post-btn" type="submit" disabled={sending || !draft.trim()} aria-label="Send message">
-                  <FiSend style={{ marginRight: 6, verticalAlign: 'middle' }} />{sending ? 'Sending…' : 'Send'}
+                  <FiSend size={16} /> <span>{sending ? 'Sending…' : 'Send'}</span>
                 </button>
               </form>
             </>
           ) : (
-            <div style={{ margin: 'auto', textAlign: 'center', maxWidth: 340, color: 'var(--text-tertiary)' }}>
+            <div className="messages-empty-thread">
               <FiMessageCircle size={32} />
-              <h2 style={{ color: 'var(--text-primary)', fontSize: '1.1rem' }}>Your messages</h2>
-              <p>Choose an existing conversation or enter a username to start a new one.</p>
+              <strong>Your messages</strong>
+              <p>Select a conversation or enter a username to start a new one.</p>
             </div>
           )}
-          {error ? <p role="alert" style={{ color: 'var(--danger, #d33)', marginBottom: 0 }}>{error}</p> : null}
+          {error ? <p role="alert" className="messages-error">{error}</p> : null}
         </section>
       </div>
     </main>
